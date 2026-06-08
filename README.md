@@ -14,52 +14,39 @@ The system demonstrates a **sequential coordination pattern** where:
 
 ## System Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    User Query                            │
-│         "What should I do in Chicago?"                   │
-└────────────────────┬────────────────────────────────────┘
-                     │
-                     ▼
-        ┌────────────────────────────┐
-        │  Orchestrator Agent        │
-        │  (Coordinator)             │
-        │                            │
-        │ - Receives user query      │
-        │ - Routes to agents         │
-        │ - Synthesizes results      │
-        └─────┬──────────────┬───────┘
-              │              │
-              ▼              ▼
-        ┌──────────────┐  ┌──────────────────┐
-        │Weather Agent │  │Activity Agent    │
-        │              │  │                  │
-        │Tools:        │  │Tools:            │
-        │- get_current │  │- get_activities  │
-        │  _weather    │  │                  │
-        │- get_forecast│  │                  │
-        └────┬─────────┘  └────┬─────────────┘
-             │                 │
-             ▼                 ▼
-      ┌─────────────────┐  ┌──────────────────┐
-      │OpenWeather API  │  │Activity Database │
-      │(Real-time data) │  │(Mock data)       │
-      └─────────────────┘  └──────────────────┘
-             │                 │
-             └────┬────────────┘
-                  │
-                  ▼
-        ┌────────────────────────────┐
-        │  Synthesized Response      │
-        │  (Weather + Activities)    │
-        └────────────────────────────┘
-                  │
-                  ▼
-        ┌────────────────────────────┐
-        │      User Response         │
-        │ "It will be sunny (75°F).  │
-        │  Try hiking, beach, etc!"  │
-        └────────────────────────────┘
+```mermaid
+flowchart TD
+    U["User Query"]
+
+    O["Orchestrator Agent"]
+
+    W["Weather Agent"]
+    A["Activity Agent"]
+
+    OW["OpenWeather API"]
+    DB["Activity Database"]
+
+    S["Response Synthesis"]
+
+    R["Final User Response"]
+
+    U --> O
+
+    O --> W
+    O --> A
+
+    W --> OW
+    A --> DB
+
+    OW --> W
+    DB --> A
+
+    W --> O
+    A --> O
+
+    O --> S
+    S --> R
+
 ```
 
 ---
